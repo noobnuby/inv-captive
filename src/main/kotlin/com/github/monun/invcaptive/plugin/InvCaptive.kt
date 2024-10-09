@@ -1,25 +1,27 @@
 package com.github.monun.invcaptive.plugin
 
 import com.google.common.collect.ImmutableList
-import net.minecraft.server.v1_16_R3.*
+import net.kyori.adventure.text.minimessage.MiniMessage
+import net.minecraft.core.NonNullList
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.YamlConfiguration
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack
+import org.bukkit.craftbukkit.inventory.CraftItemStack
+import net.minecraft.server.*
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import java.util.ArrayList
 import kotlin.math.min
 
 object InvCaptive {
-    private val items: NonNullList<ItemStack>
+    private val items: ArrayList<ItemStack>
 
-    private val armor: NonNullList<ItemStack>
+    private val armor: ArrayList<ItemStack>
 
-    private val extraSlots: NonNullList<ItemStack>
+    private val extraSlots: ArrayList<ItemStack>
 
-    private val contents: List<NonNullList<ItemStack>>
+    private val contents: List<ArrayList<ItemStack>>
 
     init {
         val inv = PlayerInventory(null)
@@ -89,14 +91,14 @@ object InvCaptive {
         extraSlots.replaceAll { item.cloneItemStack() }
         items[0] = ItemStack.b
 
-        for (player in Bukkit.getOnlinePlayers()) {
+        Bukkit.getOnlinePlayers().forEach { player ->
             player.updateInventory()
         }
     }
 
-    private val releaseSlotItem = CraftItemStack.asNMSCopy(org.bukkit.inventory.ItemStack(Material.GOLDEN_APPLE).apply {
+    private val releaseSlotItem = CraftItemStack.asNMSCopy(ItemStack(Material.GOLDEN_APPLE).apply {
         itemMeta = itemMeta!!.apply {
-            setDisplayName("${ChatColor.GOLD}새로운 인벤토리")
+			itemName(MiniMessage.miniMessage().deserialize("<gold>새로운 인벤토리"))
         }
     })
 
